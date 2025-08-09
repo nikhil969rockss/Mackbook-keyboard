@@ -1,3 +1,4 @@
+"use client";
 import Button from "@/components/Button";
 import CapsLock from "@/components/CapsLock";
 import Container from "@/components/Container";
@@ -10,8 +11,71 @@ import {
   keyboardKeysRow4b,
   numberkeys,
 } from "@/constants";
+import { useEffect, useState } from "react";
 
 export default function Home() {
+  const [pressedKeys, setPressedKeys] = useState<string[]>([]);
+
+  useEffect(() => {
+    const handleKeyDown = (e: globalThis.KeyboardEvent) => {
+      
+      if (e.key.toLowerCase() === "tab") {
+        e.preventDefault(); // Prevent default tab behavior
+      }
+      if (e.code.toLowerCase() === "shiftleft") {
+        const leftShiftKey = e.code.toLowerCase();
+        setPressedKeys((prev) =>
+          prev.includes(leftShiftKey) ? prev : [...prev, leftShiftKey],
+        );
+        return;
+      }
+      if (e.code.toLowerCase() === "metaleft") {
+        const leftCommand = e.code.toLowerCase();
+        setPressedKeys((prev) =>
+          prev.includes(leftCommand) ? prev : [...prev, leftCommand],
+        );
+        return;
+      }
+      if (e.code.toLowerCase() === "altleft") {
+        const leftControl = e.code.toLowerCase();
+        setPressedKeys((prev) =>
+          prev.includes(leftControl) ? prev : [...prev, leftControl],
+        );
+        return;
+      }
+
+      const key = e.key.toLowerCase();
+
+      setPressedKeys((prev) => (prev.includes(key) ? prev : [...prev, key]));
+    };
+    const handleKeyUp = (e: globalThis.KeyboardEvent) => {
+      if (e.code.toLowerCase() === "shiftleft") {
+        const leftShiftKey = e.code.toLowerCase();
+        setPressedKeys((prev) => prev.filter((k) => k !== leftShiftKey));
+        return;
+      }
+      if (e.code.toLowerCase() === "altleft") {
+        const leftControl = e.code.toLowerCase();
+        setPressedKeys((prev) => prev.filter((k) => k !== leftControl));
+        return;
+      }
+      if (e.code.toLowerCase() === "metaleft") {
+        const leftCommand = e.code.toLowerCase();
+        setPressedKeys((prev) => prev.filter((k) => k !== leftCommand));
+        return;
+      }
+      const key = e.key.toLowerCase();
+      setPressedKeys((prev) => prev.filter((k) => k !== key));
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("keyup", handleKeyUp);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("keyup", handleKeyUp);
+    };
+  }, []);
+
   return (
     <Container>
       {/* //TODO: Add scrren here */}
@@ -21,21 +85,38 @@ export default function Home() {
             <Button
               key={numberKey.buttonText}
               buttonSymbol={numberKey.buttonSymbol}
+              keyValue={numberKey.buttonText.toLowerCase()}
+              isActive={pressedKeys.includes(
+                numberKey.buttonText.toLowerCase(),
+              )}
             >
               {numberKey.buttonText}
             </Button>
           ))}
-          <Button className="min-w-[70px] flex-1 items-end justify-end">
+          <Button
+            keyValue={"backspace"}
+            isActive={pressedKeys.includes("backspace")}
+            className="min-w-[70px] flex-1 items-end justify-end"
+          >
             delete
           </Button>
         </div>
         {/* keyboard Row one */}
         <div className="flex items-center gap-2">
-          <Button className="min-w-[70px] flex-1 items-start justify-end">
+          <Button
+            keyValue="tab"
+            isActive={pressedKeys.includes("tab")}
+            className="min-w-[70px] flex-1 items-start justify-end"
+          >
             tab
           </Button>
           {keyBoardKeysRow1.map((key) => (
-            <Button key={key.buttonText} buttonSymbol={key.buttonSymbol}>
+            <Button
+              key={key.buttonText}
+              buttonSymbol={key.buttonSymbol}
+              keyValue={key.buttonText.toLowerCase()}
+              isActive={pressedKeys.includes(key.buttonText.toLowerCase())}
+            >
               {key.buttonText}
             </Button>
           ))}
@@ -44,13 +125,22 @@ export default function Home() {
         {/* keybord Row 2 */}
 
         <div className="flex items-center gap-2">
-          <CapsLock />
+          <CapsLock isActive={pressedKeys.includes("capslock")} />
           {keyboardKeysRow2.map((key) => (
-            <Button key={key.buttonText} buttonSymbol={key.buttonSymbol}>
+            <Button
+              keyValue={key.buttonText.toLowerCase()}
+              isActive={pressedKeys.includes(key.buttonText.toLowerCase())}
+              key={key.buttonText}
+              buttonSymbol={key.buttonSymbol}
+            >
               {key.buttonText}
             </Button>
           ))}
-          <Button className="min-w-[80px] flex-1 items-end justify-end">
+          <Button
+            keyValue={"enter"}
+            isActive={pressedKeys.includes("enter")}
+            className="min-w-[80px] flex-1 items-end justify-end"
+          >
             return
           </Button>
         </div>
@@ -58,15 +148,28 @@ export default function Home() {
         {/* keybord Row 3 */}
 
         <div className="flex items-center gap-2">
-          <Button className="min-w-[100px] flex-1 items-end justify-end">
+          <Button
+            keyValue="shift"
+            isActive={pressedKeys.includes("shiftleft")}
+            className="min-w-[100px] flex-1 items-end justify-end"
+          >
             shift
           </Button>
           {keyboardKeysRow3.map((key) => (
-            <Button buttonSymbol={key.buttonSymbol} key={key.buttonText}>
+            <Button
+              keyValue={key.buttonText.toLowerCase()}
+              isActive={pressedKeys.includes(key.buttonText.toLowerCase())}
+              buttonSymbol={key.buttonSymbol}
+              key={key.buttonText}
+            >
               {key.buttonText}
             </Button>
           ))}
-          <Button className="min-w-[100px] flex-1 items-end justify-end">
+          <Button
+            keyValue={"shift"}
+            isActive={pressedKeys.includes("shift")}
+            className="min-w-[100px] flex-1 items-end justify-end"
+          >
             shift
           </Button>
         </div>
@@ -75,6 +178,8 @@ export default function Home() {
             <Button
               className={`${key.buttonText === "fn" && "items-start justify-end"} items-end`}
               key={key.buttonText}
+              keyValue={key.buttonText.toLowerCase()}
+              isActive={pressedKeys.includes(key.buttonText.toLowerCase())}
               buttonSymbol={key.buttonSymbol}
             >
               {key.buttonText}
@@ -85,13 +190,23 @@ export default function Home() {
               <Button
                 className={`${key.buttonText === "command" && "w-[90px] max-lg:w-[60px]"} items-end`}
                 key={key.buttonText}
+                keyValue={key.buttonText === "command" ? "metaleft" : "altleft"}
+                isActive={pressedKeys.includes(
+                  key.buttonText === "command" ? "metaleft" : "altleft",
+                )}
                 buttonSymbol={key.buttonSymbol}
               >
                 {key.buttonText}
               </Button>
             );
           })}
-          <Button className="min-w-[200px] flex-1">&nbsp;&nbsp;</Button>
+          <Button
+            keyValue=" "
+            isActive={pressedKeys.includes(" ")}
+            className="min-w-[200px] flex-1"
+          >
+            &nbsp;&nbsp;
+          </Button>
           {keyboardKeysRow4b
             .map((key) => {
               return (
@@ -99,22 +214,44 @@ export default function Home() {
                   className={`${key.buttonText === "command" && "w-[90px] max-lg:w-[60px]"} items-start`}
                   key={key.buttonText}
                   buttonSymbol={key.buttonSymbol}
+                  keyValue={key.buttonText === "command" ? "meta" : "alt"}
+                  isActive={pressedKeys.includes(
+                    key.buttonText === "command" ? "meta" : "alt",
+                  )}
                 >
                   {key.buttonText}
                 </Button>
               );
             })
             .reverse()}
-          <Button className="s">&larr;</Button>
+          <Button
+            keyValue="arrowleft"
+            isActive={pressedKeys.includes("arrowleft")}
+          >
+            &larr;
+          </Button>
           <div className="flex flex-col gap-1">
-            <Button className="h-[30px] w-[60px] max-lg:h-[25px] max-lg:w-[50px]">
+            <Button
+              className="h-[30px] w-[60px] max-lg:h-[25px] max-lg:w-[50px]"
+              keyValue="arrowup"
+              isActive={pressedKeys.includes("arrowup")}
+            >
               &uarr;
             </Button>
-            <Button className="h-[30px] w-[60px] max-lg:h-[25px] max-lg:w-[50px]">
+            <Button
+              className="h-[30px] w-[60px] max-lg:h-[25px] max-lg:w-[50px]"
+              keyValue="arrowdown"
+              isActive={pressedKeys.includes("arrowdown")}
+            >
               &darr;
             </Button>
           </div>
-          <Button>&rarr;</Button>
+          <Button
+            keyValue="arrowright"
+            isActive={pressedKeys.includes("arrowright")}
+          >
+            &rarr;
+          </Button>
         </div>
       </KeyboradLayout>
     </Container>

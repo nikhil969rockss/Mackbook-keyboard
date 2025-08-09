@@ -8,10 +8,6 @@ type ContainerProps = {
   className?: string;
 };
 const Container: React.FC<ContainerProps> = ({ children, className }) => {
-  useEffect(() => {
-    
-  }, []);
-
   return (
     <div className={`${cn("mx-auto max-w-6xl p-4", className)}`}>
       {children}
