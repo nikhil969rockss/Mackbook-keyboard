@@ -24,7 +24,7 @@ const Button: React.FC<ButtonProps> = ({
       onMouseUpCapture={() => setActive(false)}
       onTouchStartCapture={() => setActive(true)}
       onTouchEndCapture={() => setActive(false)}
-      className={`${cn("flex h-[65px] w-[65px] cursor-pointer flex-col items-center justify-center rounded-md bg-[#0c0c0e] p-2 text-neutral-200 transition-all duration-300 hover:shadow-xs hover:shadow-white/40 active:scale-95 max-lg:h-[50px] max-lg:w-[50px] max-lg:text-[10px]", className)} ${isActive || active ? "scale-95 border bg-neutral-300 !text-neutral-700 shadow-md shadow-white/20 transition-all" : ""}`}
+      className={`${cn("flex h-[65px] w-[65px] cursor-pointer flex-col items-center justify-center rounded-md bg-[#0c0c0e] p-2 text-neutral-200 transition-all duration-300 active:scale-90 max-lg:h-[50px] max-lg:w-[50px] max-lg:text-[10px]", className)} ${isActive || active ? "scale-90 shadow-md shadow-black/20 transition-all" : "shadow-md shadow-white/50"}`}
     >
       <span>{buttonSymbol}</span>
       {children}
