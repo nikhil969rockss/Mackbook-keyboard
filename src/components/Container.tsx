@@ -9,7 +9,7 @@ type ContainerProps = {
 };
 const Container: React.FC<ContainerProps> = ({ children, className }) => {
   return (
-    <div className={`${cn("mx-auto max-w-6xl p-4", className)}`}>
+    <div className={`${cn("mx-auto p-4 sm:max-w-6xl overflow-x-hidden", className)}`}>
       {children}
     </div>
   );

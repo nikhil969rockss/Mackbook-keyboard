@@ -16,9 +16,11 @@ import { useEffect, useState } from "react";
 export default function Home() {
   const [pressedKeys, setPressedKeys] = useState<string[]>([]);
 
+  const [overlay, setOverlay] = useState(false);
+
   useEffect(() => {
+    if (overlay) return;
     const handleKeyDown = (e: globalThis.KeyboardEvent) => {
-      
       if (e.key.toLowerCase() === "tab") {
         e.preventDefault(); // Prevent default tab behavior
       }
@@ -75,10 +77,29 @@ export default function Home() {
       window.removeEventListener("keyup", handleKeyUp);
     };
   }, []);
+  useEffect(() => {
+    const addOverlay = async () => {
+      if (window.innerWidth < 768) {
+        console.log("chala");
+        setOverlay(true);
+        return;
+      }
+      setOverlay(false);
+    };
+    window.addEventListener("resize", addOverlay);
+    addOverlay();
+    return () => window.removeEventListener("resize", addOverlay);
+  }, [overlay]);
 
   return (
-    <Container>
+    <Container className="relative">
       {/* //TODO: Add scrren here */}
+      {overlay && (
+        <div className="overlay absolute inset-0 flex items-center justify-center bg-black/60 text-center text-white/60 backdrop-blur-sm">
+          Best view on tablet or Desktop <br />
+          kindly change your device
+        </div>
+      )}
       <KeyboradLayout className="mt-40">
         <div className="flex items-center gap-2">
           {numberkeys.map((numberKey) => (
