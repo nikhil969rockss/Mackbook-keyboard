@@ -3,6 +3,7 @@ import Button from "@/components/Button";
 import CapsLock from "@/components/CapsLock";
 import Container from "@/components/Container";
 import KeyboradLayout from "@/components/KeyboradLayout";
+import Navbar from "@/components/Navbar";
 import {
   keyBoardKeysRow1,
   keyboardKeysRow2,
@@ -126,6 +127,7 @@ export default function Home() {
           kindly change your device
         </div>
       )}
+      <Navbar />
 
       <Container className="flex h-[20vh] items-center justify-center text-[max(3vw,30px)] font-[900] capitalize">
         {pressedKeys}
