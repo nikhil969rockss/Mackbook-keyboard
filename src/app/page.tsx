@@ -18,6 +18,7 @@ export default function Home() {
 
   const [overlay, setOverlay] = useState(false);
 
+  // Use of keyboard stroke
   useEffect(() => {
     if (overlay) return;
     const handleKeyDown = (e: globalThis.KeyboardEvent) => {
@@ -25,48 +26,73 @@ export default function Home() {
         e.preventDefault(); // Prevent default tab behavior
       }
       if (e.code.toLowerCase() === "shiftleft") {
-        const leftShiftKey = e.code.toLowerCase();
+        const leftShiftKey = "L-Shift";
         setPressedKeys((prev) =>
           prev.includes(leftShiftKey) ? prev : [...prev, leftShiftKey],
         );
         return;
       }
       if (e.code.toLowerCase() === "metaleft") {
-        const leftCommand = e.code.toLowerCase();
+        const leftCommand = "L-Command";
         setPressedKeys((prev) =>
           prev.includes(leftCommand) ? prev : [...prev, leftCommand],
         );
         return;
       }
       if (e.code.toLowerCase() === "altleft") {
-        const leftControl = e.code.toLowerCase();
+        const leftControl = "L-Option";
         setPressedKeys((prev) =>
           prev.includes(leftControl) ? prev : [...prev, leftControl],
         );
         return;
       }
 
-      const key = e.key.toLowerCase();
+      let key = e.key.toLowerCase();
+      if (key === "meta") {
+        key = "R-Command";
+      }
+      if (key === "alt") {
+        key = "R-Option";
+      }
+      if (key === "shift") {
+        key = "R-Shift";
+      }
+      if (key === " ") {
+        key = "Space";
+      }
 
       setPressedKeys((prev) => (prev.includes(key) ? prev : [...prev, key]));
     };
     const handleKeyUp = (e: globalThis.KeyboardEvent) => {
       if (e.code.toLowerCase() === "shiftleft") {
-        const leftShiftKey = e.code.toLowerCase();
+        const leftShiftKey = "L-Shift";
         setPressedKeys((prev) => prev.filter((k) => k !== leftShiftKey));
         return;
       }
       if (e.code.toLowerCase() === "altleft") {
-        const leftControl = e.code.toLowerCase();
+        const leftControl = "L-Option";
         setPressedKeys((prev) => prev.filter((k) => k !== leftControl));
         return;
       }
       if (e.code.toLowerCase() === "metaleft") {
-        const leftCommand = e.code.toLowerCase();
+        const leftCommand = "L-Command";
         setPressedKeys((prev) => prev.filter((k) => k !== leftCommand));
         return;
       }
-      const key = e.key.toLowerCase();
+      let key = e.key.toLowerCase();
+      if (key === "meta") {
+        key = "R-Command";
+      }
+      if (key === "alt") {
+        key = "R-Option";
+      }
+      if (key === "shift") {
+        key = "R-Shift";
+      }
+      if (key === " ") {
+        key = "Space";
+      }
+
       setPressedKeys((prev) => prev.filter((k) => k !== key));
     };
 
@@ -77,6 +103,7 @@ export default function Home() {
       window.removeEventListener("keyup", handleKeyUp);
     };
   }, []);
+
   useEffect(() => {
     const addOverlay = async () => {
       if (window.innerWidth < 768) {
@@ -93,14 +120,18 @@ export default function Home() {
 
   return (
     <Container className="relative">
-      {/* //TODO: Add scrren here */}
       {overlay && (
         <div className="overlay absolute inset-0 flex items-center justify-center bg-black/60 text-center text-white/60 backdrop-blur-sm">
           Best view on tablet or Desktop <br />
           kindly change your device
         </div>
       )}
-      <KeyboradLayout className="mt-40">
+
+      <Container className="flex h-[20vh] items-center justify-center text-[max(3vw,30px)] font-[900] capitalize">
+        {pressedKeys}
+      </Container>
+
+      <KeyboradLayout className="mt-4">
         <div className="flex items-center gap-2">
           {numberkeys.map((numberKey) => (
             <Button
@@ -171,7 +202,7 @@ export default function Home() {
         <div className="flex items-center gap-2">
           <Button
             keyValue="shift"
-            isActive={pressedKeys.includes("shiftleft")}
+            isActive={pressedKeys.includes("L-Shift")}
             className="min-w-[100px] flex-1 items-end justify-end"
           >
             shift
@@ -188,7 +219,7 @@ export default function Home() {
           ))}
           <Button
             keyValue={"shift"}
-            isActive={pressedKeys.includes("shift")}
+            isActive={pressedKeys.includes("R-Shift")}
             className="min-w-[100px] flex-1 items-end justify-end"
           >
             shift
@@ -211,9 +242,11 @@ export default function Home() {
               <Button
                 className={`${key.buttonText === "command" && "w-[90px] max-lg:w-[60px]"} items-end`}
                 key={key.buttonText}
-                keyValue={key.buttonText === "command" ? "metaleft" : "altleft"}
+                keyValue={
+                  key.buttonText === "command" ? "L-Command" : "L-Option"
+                }
                 isActive={pressedKeys.includes(
-                  key.buttonText === "command" ? "metaleft" : "altleft",
+                  key.buttonText === "command" ? "L-Command" : "L-Option",
                 )}
                 buttonSymbol={key.buttonSymbol}
               >
@@ -222,8 +255,8 @@ export default function Home() {
             );
           })}
           <Button
-            keyValue=" "
-            isActive={pressedKeys.includes(" ")}
+            keyValue="Space"
+            isActive={pressedKeys.includes("Space")}
             className="min-w-[200px] flex-1"
           >
             &nbsp;&nbsp;
@@ -235,9 +268,11 @@ export default function Home() {
                   className={`${key.buttonText === "command" && "w-[90px] max-lg:w-[60px]"} items-start`}
                   key={key.buttonText}
                   buttonSymbol={key.buttonSymbol}
-                  keyValue={key.buttonText === "command" ? "meta" : "alt"}
+                  keyValue={
+                    key.buttonText === "command" ? "R-Command" : "R-Option"
+                  }
                   isActive={pressedKeys.includes(
-                    key.buttonText === "command" ? "meta" : "alt",
+                    key.buttonText === "command" ? "R-Command" : "R-Option",
                   )}
                 >
                   {key.buttonText}
